@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enrico Bertolino — Digital Asset Broker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F8F7F4;
+    --ink: #0E0E0C;
+    --muted: #6E6D69;
+    --light: #BDBBB4;
+    --line: rgba(14,14,12,0.1);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem 4rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-cta {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 0.5rem 1.2rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: var(--sans);
+    font-weight: 400;
+    transition: opacity 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.75; }
+
+  /* HERO */
+  .hero {
+    padding: 22vh 4rem 10vh;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .hero-eyebrow-line {
+    width: 40px;
+    height: 1px;
+    background: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .hero-eyebrow-text {
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-headline {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6.5vw, 5.2rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 2.5rem;
+    max-width: 720px;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 520px;
+    font-weight: 300;
+    margin-bottom: 3.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .btn-dark {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-family: var(--sans);
+    color: var(--bg);
+    background: var(--ink);
+    padding: 0.85rem 2rem;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn-dark:hover { opacity: 0.7; }
+
+  /* SERVICES — stacked vertically */
+  .services {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .service-card {
+    padding: 6rem 4rem;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .service-card:last-child { border-bottom: none; }
+  .service-card.visible { opacity: 1; transform: translateY(0); }
+
+  .service-num {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--light);
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  .service-title {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-title em { font-style: italic; color: var(--muted); }
+
+  .service-body {
+    font-size: 0.88rem;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    max-width: 580px;
+  }
+
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .service-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+
+  .service-list-item::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--ink);
+    flex-shrink: 0;
+    margin-top: 0.55rem;
+  }
+
+  /* ABOUT */
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .about-strip.visible { opacity: 1; transform: translateY(0); }
+
+  .about-left {
+    padding: 5rem 4rem;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+
+  .about-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--light);
+  }
+
+  .about-location {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .about-right {
+    padding: 5rem 4rem;
+  }
+
+  .about-right p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    max-width: 540px;
+  }
+
+  .about-right p:last-child { margin-bottom: 0; }
+
+  .about-right strong {
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* CONTACT */
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .contact.visible { opacity: 1; transform: translateY(0); }
+
+  .contact-left {
+    padding: 5rem 4rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .contact-headline {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-headline em { font-style: italic; color: var(--muted); }
+
+  .contact-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 340px;
+  }
+
+  .contact-right {
+    padding: 5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-email {
+    font-size: 0.9rem;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 0.8rem;
+  }
+
+  .contact-link {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .contact-link:hover { color: var(--ink); }
+
+  .contact-link-arrow {
+    font-size: 0.8rem;
+    color: var(--light);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .contact-link:hover .contact-link-arrow {
+    transform: translateX(4px);
+    color: var(--muted);
+  }
+
+  .contact-copy {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--light);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .hero { padding: 16vh 1.5rem 6vh; }
+    .hero-headline { font-size: 2.6rem; }
+    .hero-actions { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+    .service-card { padding: 3rem 1.5rem; }
+    .about-strip, .contact { grid-template-columns: 1fr; }
+    .about-left {
+      padding: 3rem 1.5rem;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .about-right { padding: 3rem 1.5rem; }
+    .contact-left {
+      padding: 3rem 1.5rem;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .contact-right { padding: 3rem 1.5rem; justify-content: flex-start; gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-name">Enrico Bertolino</a>
+  <a href="#contact" class="nav-cta">Get in touch</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="hero-eyebrow-line"></div>
+    <span class="hero-eyebrow-text">AI Tools · Developer Directories · Content Sites</span>
+  </div>
+  <h1 class="hero-headline">From valuation to close —<br><em>every detail handled.</em></h1>
+  <p class="hero-sub">I connect founders of digital assets with the right buyers, managing the entire process from analysis to transfer. You focus on what's next.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-dark">Start a conversation</a>
+  </div>
+</section>
+
+<!-- SELLERS -->
+<section class="services" id="services">
+  <div class="service-card">
+    <span class="service-num">Sellers</span>
+    <h2 class="service-title">Exit on your<br><em>own terms.</em></h2>
+    <p class="service-body">Built something valuable but don't know how to sell it — or don't have the time? I handle every step with precision. You tell me what you want. I build the strategy and manage the process end to end.</p>
+    <div class="service-list">
+      <div class="service-list-item">Asset valuation and market positioning</div>
+      <div class="service-list-item">Buyer identification and direct outreach</div>
+      <div class="service-list-item">Negotiation and deal structuring</div>
+      <div class="service-list-item">Full process management via Escrow</div>
+    </div>
+  </div>
+
+  <!-- BUYERS -->
+  <div class="service-card" id="buyers">
+    <span class="service-num">Buyers</span>
+    <h2 class="service-title">Your next asset,<br><em>already vetted.</em></h2>
+    <p class="service-body">Looking for AI tools, developer directories, newsletters, or content sites? I source off-market assets and bring them to buyers with a clear strategic reason to own them.</p>
+    <div class="service-list">
+      <div class="service-list-item">AI tools and developer directories</div>
+      <div class="service-list-item">Niche newsletters and content sites</div>
+      <div class="service-list-item">Off-market, pre-vetted opportunities</div>
+      <div class="service-list-item">Strategic fit analysis included</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-strip" id="about">
+  <div class="about-left">
+    <span class="about-label">About</span>
+    <span class="about-location">Italy — operating globally</span>
+  </div>
+  <div class="about-right">
+    <p>I'm <strong>Enrico Bertolino</strong>, an independent digital asset broker focused on AI tools, developer directories, and content sites.</p>
+    <p>I work with a small number of clients at a time — because every deal deserves full attention, from the first number to the final transfer.</p>
+    <p>Currently working with sellers and buyers across Europe and the US.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left">
+    <h2 class="contact-headline">Have an asset<br>to sell — or buy?<br><em>Let's talk.</em></h2>
+    <p class="contact-sub">Whether you're looking to exit or acquire, I'm selective about the deals I take on. Reach out and let's see if there's a fit.</p>
+  </div>
+  <div class="contact-right">
+    <div class="contact-links">
+      <p class="contact-email">enrico@bertolino.broker</p>
+      <a href="https://www.linkedin.com/in/enrico-bertolino-6045703bb" class="contact-link" target="_blank" rel="noopener">
+        LinkedIn
+        <span class="contact-link-arrow">→</span>
+      </a>
+    </div>
+    <span class="contact-copy">© 2026 Enrico Bertolino</span>
+  </div>
+</section>
+
+<script>
+  const els = document.querySelectorAll('.service-card, .about-strip, .contact');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  els.forEach(el => obs.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
